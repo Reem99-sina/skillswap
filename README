@@ -1,0 +1,26 @@
+SkillSwap Backend API
+
+A backend system for a skill-sharing platform where users can learn and teach 
+lessons based on interests, skill level, and AI-based recommendations.
+
+🚀 Features
+    👤 User authentication (Signup / Login)
+    📧 Email verification with OTP
+    🔐 JWT authentication
+    🎓 Role-based access (User / Instructor)
+    📚 Lessons system (CRUD)
+    🏷️ Interests & tags system
+    📤 Upload video + thumbnail (Multer)
+    🔎 Filter lessons by interests
+    📄 Pagination support
+    🧠 AI-ready recommendation structure
+    🛡️ Input validation with Joi
+    🗑️ Secure delete/update logic
+🛠️ Tech Stack
+    Node.js
+    Express.js
+    MongoDB + Mongoose
+    JWT (Authentication)
+    Nodemailer (Email service)
+    Multer (File upload)
+    Joi (Validation)
