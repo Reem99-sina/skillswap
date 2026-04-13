@@ -4,6 +4,7 @@ const {
   userRouter,
   lessonRouter,
   interestRouter,
+  pathRouter,
 } = require("./modules/router");
 const path = require("path");
 const app = express();
@@ -14,11 +15,12 @@ require("dotenv").config();
 app.use("/user", userRouter);
 app.use("/lesson", lessonRouter);
 app.use("/interest", interestRouter);
+app.use("/path", pathRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/uploads/picture", express.static("./uploads/lessons"));
 app.use("/uploads/videos", express.static("./uploads/video"));
 connectdb();
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT||"3000", () => {
   console.log("server is running on port");
 });
