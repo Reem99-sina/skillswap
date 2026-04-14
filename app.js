@@ -7,6 +7,8 @@ const {
   pathRouter,
 } = require("./modules/router");
 const path = require("path");
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -20,7 +20,7 @@ const router = express.Router();
 router.post("/signup", validation(signupSchema), signup);
 router.post("/signin", validation(signinSchema), signin);
 router.patch("/verify", validation(verifyEmailSchema), verifyEmail);
-router.patch("/update", validation(updateProfileSchema), updateProfile);
+router.patch("/update", auth(endPoint.user),validation(updateProfileSchema), updateProfile);
 router.get("/", auth(endPoint.user),profile);
 
 module.exports = router;
