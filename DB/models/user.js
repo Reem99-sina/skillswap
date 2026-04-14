@@ -41,7 +41,7 @@ const userSchema = new Schema(
     interests: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "interest",
+        ref: "Interest",
       },
     ],
     profile_picture: String,
