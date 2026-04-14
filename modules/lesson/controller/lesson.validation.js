@@ -37,6 +37,8 @@ const getLessonsByTagsSchema = {
 
     page: Joi.number().min(1).optional(),
     limit: Joi.number().min(1).max(50).optional(),
+    search:Joi.string()
+      .optional(),
   }),
 };
 

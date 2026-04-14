@@ -59,22 +59,27 @@ const deleteLesson = async (req, res) => {
 
 const getLessonsByTags = async (req, res) => {
   try {
-    const { tags, page, limit } = req.query;
+    const { tags, search, page, limit } = req.query;
 
-    const { skip, limit: pageSize } = paginate(Number(page), Number(limit));
+    const pageNum = Number(page) || 1;
+    const limitNum = Number(limit) ;
+
+    const { skip, limit: pageSize } = paginate(pageNum, limitNum);
 
     let query = {};
 
+    // ✅ 1. Tags filter
     if (tags) {
-      const tagsArray = tags.split(",").map((t) => t.trim());
-
-      const interests = await Interest.find({
-        name: { $in: tagsArray },
-      });
-
-      const ids = interests.map((i) => i._id);
-
+      const ids = tags.split(",").map((t) => t.trim());
       query.tags = { $in: ids };
+    }
+
+    // ✅ 2. Title search (NEW)
+    if (search) {
+      query.title = {
+        $regex: search,
+        $options: "i", 
+      };
     }
 
     const lessons = await Lesson.find(query)
@@ -88,7 +93,7 @@ const getLessonsByTags = async (req, res) => {
       data: lessons,
       pagination: {
         total,
-        page: Number(page || 1),
+        page: pageNum,
         limit: pageSize,
         pages: Math.ceil(total / pageSize),
       },
@@ -113,6 +118,8 @@ const getLessonById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
 
 module.exports = {
   addLesson,
