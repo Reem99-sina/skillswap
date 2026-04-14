@@ -20,16 +20,13 @@ const signup = async (req, res) => {
       password,
       skill_level,
       interests,
-      verifyCode: code,
-      verifyCodeExpire: Date.now() + 10 * 60 * 1000,
       role
     });
 
-    await sendCodeEmail({to:email, code:code});
+    // await sendCodeEmail({to:email, code:code});
 
     res.json({
-      message: "Check email for verification code",
-      userId: user._id,
+      message: "done create user"
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -73,13 +70,11 @@ const signin = async (req, res) => {
 
   if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
-  if (!user.isVerified)
-    return res.status(400).json({ message: "Verify your email first" });
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
-console.log(user,'user')
+
   const token = GenerateToken(user._id);
   const { password: _, ...userData } = user.toObject();
 
