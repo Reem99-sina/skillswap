@@ -48,8 +48,15 @@ const getLessonByIdSchema = {
   }),
 };
 
+const paymentIntent = {
+  body: Joi.object({
+    lessonId: Joi.string().hex().length(24).required(),
+  }),
+};
+
 module.exports={
     addLessonSchema,
+    paymentIntent,
     deleteLessonSchema,
     getLessonByIdSchema,
     getLessonsByTagsSchema

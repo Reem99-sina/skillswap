@@ -6,12 +6,14 @@ const {
   deleteLesson,
   getLessonsByTags,
   getLessonById,
+  createPaymentIntent,
 } = require("./controller/lesson.service");
 const {
   addLessonSchema,
   deleteLessonSchema,
   getLessonsByTagsSchema,
   getLessonByIdSchema,
+  paymentIntent,
 } = require("./controller/lesson.validation");
 const { endPoint } = require("./controller/lesson.endpoint");
 const { myMulter, filetype } = require("../../services/multer");
@@ -42,6 +44,14 @@ router.get(
   "/lessons/:lessonId",
   validation(getLessonByIdSchema),
   getLessonById,
+);
+
+router.post(
+  "/payments/create-intent",
+
+  validation(paymentIntent),
+    auth(endPoint.all),
+  createPaymentIntent,
 );
 
 module.exports = router;

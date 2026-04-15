@@ -1,6 +1,5 @@
 const { Schema, default: mongoose } = require("mongoose");
 
-
 const lessonSchema = new Schema(
   {
     title: { type: String, required: true },
@@ -36,9 +35,9 @@ const lessonSchema = new Schema(
         ref: "Interest",
       },
     ],
+  
   },
   { timestamps: true },
 );
-
 
 module.exports.Lesson = mongoose.model("Lesson", lessonSchema);

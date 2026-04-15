@@ -1,10 +1,12 @@
 const { Interest } = require("../../../DB/models/interest");
 const { Lesson } = require("../../../DB/models/lesson");
 const { paginate } = require("../../../services/pagination");
+require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const addLesson = async (req, res) => {
   try {
-    const user = req.user;
+    const user = req?.user;
     if (req.fileValidationError) {
       return res.status(400).json({
         message: req.fileValidationError,
@@ -35,7 +37,7 @@ const addLesson = async (req, res) => {
 
 const deleteLesson = async (req, res) => {
   try {
-    const user = req.user;
+    const user = req?.user;
     const { lessonId } = req.params;
 
     const lesson = await Lesson.findById(lessonId);
@@ -62,7 +64,7 @@ const getLessonsByTags = async (req, res) => {
     const { tags, search, page, limit } = req.query;
 
     const pageNum = Number(page) || 1;
-    const limitNum = Number(limit) ;
+    const limitNum = Number(limit);
 
     const { skip, limit: pageSize } = paginate(pageNum, limitNum);
 
@@ -78,7 +80,7 @@ const getLessonsByTags = async (req, res) => {
     if (search) {
       query.title = {
         $regex: search,
-        $options: "i", 
+        $options: "i",
       };
     }
 
@@ -119,11 +121,33 @@ const getLessonById = async (req, res) => {
   }
 };
 
+const createPaymentIntent = async (req, res) => {
+  try {
+    const { lessonId } = req.body;
 
+    const lesson = await Lesson.findById(lessonId);
+    console.log(req.user, "req?.user", lesson.credits);
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: 50 + lesson.credits, // in cents
+      currency: "usd",
+      metadata: {
+        lessonId: lesson._id.toString(),
+        userId: req?.user?.id,
+      },
+    });
+
+    res.json({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 module.exports = {
   addLesson,
   deleteLesson,
   getLessonsByTags,
   getLessonById,
+  createPaymentIntent,
 };
