@@ -126,7 +126,7 @@ const createPaymentIntent = async (req, res) => {
     const { lessonId } = req.body;
 
     const lesson = await Lesson.findById(lessonId);
-    console.log(req.user, "req?.user", lesson.credits);
+    
     const paymentIntent = await stripe.paymentIntents.create({
       amount: 50 + lesson.credits, // in cents
       currency: "usd",

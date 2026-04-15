@@ -4,21 +4,53 @@ const { Path } = require("../../../DB/models/path");
 const createPath = async (req, res) => {
   try {
     const userId = req.user.id;
+    const { title, lessonIds } = req.body;
 
-    const { title, description, lessonIds } = req.body;
-    const lesson = await Lesson.findById(lessonIds);
-    if (!lesson) res.status(401).json({ message: "not found lesson" });
+    // 1. validate lessons exist
+    const lessons = await Lesson.findById(lessonIds);
 
-    const path = await Path.create({
+    if (!lessons) {
+      return res.status(404).json({ message: "No lesson found" });
+    }
+
+    // 2. check if user already has a path
+    let path = await Path.findOne({ user: userId });
+
+    if (path) {
+    
+      const existingIds = path.lessons.map((id) => id.toString());
+
+      const newUniqueLessons = !existingIds.includes(lessonIds);
+      
+      if (newUniqueLessons) {
+        path.lessons.push(lessonIds);
+      }
+
+      if (title) {
+        path.title = title; // optional update title
+      }
+
+      await path.save();
+
+      return res.status(200).json({
+        message: "Path updated successfully",
+        path,
+      });
+    }
+
+    // 3. CREATE NEW PATH
+    path = await Path.create({
       title,
-      description,
       user: userId,
-      lessons: lessonIds, // array of lesson IDs
+      lessons: lessonIds,
     });
 
-    res.status(201).json(path);
+    return res.status(201).json({
+      message: "Path created successfully",
+      path,
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -59,7 +91,7 @@ const updatePathProgress = async (req, res) => {
     const path = await Path.findByIdAndUpdate(
       pathId,
       { progress },
-      { new: true }
+      { new: true },
     );
 
     res.json(path);
@@ -72,5 +104,5 @@ module.exports = {
   createPath,
   updatePathProgress,
   getPathById,
-  getUserPaths
+  getUserPaths,
 };

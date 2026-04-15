@@ -4,11 +4,7 @@ const createPathSchema = {
   body: Joi.object({
     title: Joi.string().min(3).max(100).required(),
 
-    description: Joi.string().min(5).max(500).required(),
-
-    lessonIds: Joi.array()
-      .items(Joi.string().hex().length(24))
-      .min(1)
+    lessonIds:Joi.string().hex().length(24)
       .required(),
   }),
 };
