@@ -11,9 +11,7 @@ const createPathSchema = {
 
 const updatePathProgressSchema = {
   body: Joi.object({
-    pathId: Joi.string().hex().length(24).required(),
-
-    progress: Joi.number().min(0).max(100).required(),
+    lessonId: Joi.string().hex().length(24).required(),
   }),
 };
 

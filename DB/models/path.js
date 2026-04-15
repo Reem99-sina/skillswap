@@ -5,7 +5,6 @@ const { Schema } = mongoose;
 const pathSchema = new Schema(
   {
     title: { type: String, required: true },
-  
 
     user: {
       type: Schema.Types.ObjectId,
@@ -19,7 +18,12 @@ const pathSchema = new Schema(
         ref: "Lesson",
       },
     ],
-
+    completedLessons: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Lesson",
+      },
+    ],
     progress: {
       type: Number,
       default: 0,
@@ -30,7 +34,7 @@ const pathSchema = new Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports.Path = mongoose.model("Path", pathSchema);

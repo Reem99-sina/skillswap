@@ -17,11 +17,10 @@ const createPath = async (req, res) => {
     let path = await Path.findOne({ user: userId });
 
     if (path) {
-    
       const existingIds = path.lessons.map((id) => id.toString());
 
       const newUniqueLessons = !existingIds.includes(lessonIds);
-      
+
       if (newUniqueLessons) {
         path.lessons.push(lessonIds);
       }
@@ -86,15 +85,40 @@ const getPathById = async (req, res) => {
 
 const updatePathProgress = async (req, res) => {
   try {
-    const { pathId, progress } = req.body;
+    const { pathId, lessonId } = req.body;
+    const userId = req.user.id;
+    const path = await Path.findOne({ user: userId });
 
-    const path = await Path.findByIdAndUpdate(
-      pathId,
-      { progress },
-      { new: true },
+    if (!path) {
+      return res.status(404).json({ message: "Path not found" });
+    }
+
+    // ✅ avoid duplicate completion
+    const alreadyCompleted = path.completedLessons?.some(
+      (id) => id.toString() === lessonId,
     );
 
-    res.json(path);
+    if (!alreadyCompleted) {
+      path.completedLessons.push(lessonId);
+    }
+
+    const totalLessons = path.lessons.length;
+    const completedCount = path.completedLessons.length;
+
+    // ✅ calculate progress
+    const progress = Math.round((completedCount / totalLessons) * 100);
+
+    path.progress = progress;
+    if (progress === 100) {
+      path.isCompleted = true;
+    }
+
+    await path.save();
+
+    return res.json({
+      message: "Progress updated",
+      path,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
