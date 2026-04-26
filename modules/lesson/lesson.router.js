@@ -26,8 +26,8 @@ router.post(
     { name: "video", maxCount: 1 },
     { name: "thumbnail", maxCount: 1 },
   ]),
-  validation(addLessonSchema),
   auth(endPoint.add),
+  validation(addLessonSchema),
   addLesson,
 );
 

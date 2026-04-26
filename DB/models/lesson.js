@@ -19,7 +19,7 @@ const lessonSchema = new Schema(
 
     likes: { type: Number, default: 0 },
 
-    category: { type: String, required: true },
+    category: { type: String, default: "General" },
 
     difficulty: {
       type: String,

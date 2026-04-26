@@ -3,16 +3,11 @@ const Joi = require("joi");
 const addLessonSchema = {
   body: Joi.object({
     title: Joi.string().min(3).max(100).required(),
-
-    thumbnail: Joi.string().uri().optional(),
-
-    video_url: Joi.string().uri().optional(),
-
     duration: Joi.number().positive().required(),
 
     credits: Joi.number().min(0).optional(),
 
-    category: Joi.string().required(),
+    category: Joi.string(),
 
     difficulty: Joi.string()
       .valid("Beginner", "Intermediate", "Expert")

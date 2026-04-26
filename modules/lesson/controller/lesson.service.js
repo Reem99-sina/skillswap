@@ -14,12 +14,7 @@ const addLesson = async (req, res) => {
     }
     const videoFile = req.files?.video?.[0];
     const thumbnailFile = req.files?.thumbnail?.[0];
-    console.log(
-      videoFile.filename,
-      thumbnailFile.filename,
-      "thumbnailFile.path",
-      req.destination,
-    );
+
     const lesson = await Lesson.create({
       ...req.body,
       teacher: user.id,
